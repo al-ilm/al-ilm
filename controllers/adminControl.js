@@ -19,7 +19,7 @@ const createPupil = async (req, res) => {
     res.status(201).redirect(`/admin/pupil/record/${savedPupil._id}`);
   } catch (error) {
     console.error('Error creating pupil:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -43,14 +43,14 @@ const updatePupil = async (req, res) => {
 
     // If pupil not found, return 404 Not Found
     if (!updatedPupil) {
-      return res.status(404).json({ error: 'Pupil not found' });
+      return res.status(404).redirect('/404');
     }
 
     // Respond with the updated pupil data
     res.status(200).redirect(`/admin/pupil/record/${id}`);
   } catch (error) {
     console.error('Error updating pupil:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -67,7 +67,7 @@ const addContactToPupil = async (req, res) => {
   } catch (error) {
     // Handle errors and respond with an error message
     console.error('Error adding contact to pupil:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -101,7 +101,7 @@ const createVolunteer = async (req, res) => {
     res.status(201).redirect(`/admin/volunteers/${savedVolunteer._id}`);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -138,14 +138,14 @@ const updateVolunteer = async (req, res) => {
     console.log("This is updated: ", updatedVolunteer)
     // If volunteer not found, return 404 Not Found
     if (!updatedVolunteer) {
-      return res.status(404).json({ error: 'Volunteer not found' });
+      return res.status(404).redirect('/404');
     }
 
     // Respond with the updated volunteer data
     res.status(200).redirect(`/admin/volunteers/${id}`);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -182,7 +182,7 @@ const addContact = async (req, res) => {
     res.status(200).redirect(`/admin/volunteers/${id}`);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -200,7 +200,7 @@ const updateUserIsLocked = async (req, res) => {
 
     // If user not found, return 404 Not Found
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).redirect('/404');
     }
 
     console.log('This is the user: ', user)
@@ -214,7 +214,7 @@ const updateUserIsLocked = async (req, res) => {
     res.status(201).redirect(`/admin/volunteers/${user.recordId}`);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -227,7 +227,7 @@ const activateUser = async (req, res) => {
 
         // If volunteer not found, return 404 Not Found
         if (!volunteer) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).redirect('/404');
         }
 
         // Check if a user with the same email already exists
@@ -262,8 +262,8 @@ const activateUser = async (req, res) => {
         res.status(201).redirect(`/admin/volunteers/${id}`);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+        res.status(500).redirect('/500');
+      }
 };
 
 // Program Functions  ******************************************
@@ -282,7 +282,7 @@ const getAllPrograms = async (req, res) => {
     res.json(programs);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -291,16 +291,16 @@ const getProgramById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // const program = await fetchProgramById(id);
+    const program = await fetchProgramById(id);
 
-    // if (!program) {
-    //   return res.status(404).json({ error: 'Program not found' });
-    // }
+    if (!program) {
+      return res.status(404).redirect('/404');
+    }
 
     res.render('program');
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error',error });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -313,13 +313,13 @@ const updateProgramById = async (req, res) => {
     const updatedProgram = await updateProgram(id, updatedProgramData);
 
     if (!updatedProgram) {
-      return res.status(404).json({ error: 'Program not found' });
+      return res.status(404).redirect('/404');
     }
 
     res.redirect(`/admin/programs/edit-prg/${id}`);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -348,7 +348,7 @@ const toggleProgramStatus = async (programId) => {
 
 // Your route or controller function
 const updateStatus = async (req, res) => {
-  const { programId } = req.params;
+  const { id } = req.params;
   console.log("Updating status: ", programId)
   try {
     // Call the toggleProgramStatus function
@@ -356,14 +356,14 @@ const updateStatus = async (req, res) => {
 
     // If the program is not found, return 404 Not Found
     if (!updatedProgram) {
-      return res.status(404).json({ error: 'Program not found' });
+      return res.status(404).redirect('/404');
     }
 
     // Respond with the updated program data
     res.status(200).json(updatedProgram);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -378,7 +378,7 @@ console.log("This are your inputs: ", newProgramData
     res.status(201).redirect(`/admin/programs/edit-prg/${createdProgram._id}`);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -396,7 +396,7 @@ const toggleBlogActivation = async (req, res) => {
 
     // Check if the blog is not found
     if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' });
+      return res.status(404).redirect('/404');
     }
 
     // Toggle the isActive property
@@ -408,7 +408,7 @@ const toggleBlogActivation = async (req, res) => {
     res.status(200).redirect(`/admin/blogs/edit-blog/${updatedBlog._id}`);
   } catch (error) {
     console.error('Error toggling blog activation:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -426,7 +426,7 @@ const toggleBlogFeature = async (req, res) => {
 
     // Check if the blog is not found
     if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' });
+      return res.status(404).redirect('/404');
     }
 
     // Toggle the isActive property
@@ -438,7 +438,7 @@ const toggleBlogFeature = async (req, res) => {
     res.status(200).redirect(`/admin/blogs/edit-blog/${updatedBlog._id}`);
   } catch (error) {
     console.error('Error toggling blog activation:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -456,7 +456,7 @@ const toggleBlogComment = async (req, res) => {
 
     // Check if the blog is not found
     if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' });
+      return res.status(404).redirect('/404');
     }
 
     // Toggle the isActive property
@@ -468,7 +468,7 @@ const toggleBlogComment = async (req, res) => {
     res.status(200).redirect(`/admin/blogs/edit-blog/${updatedBlog._id}`);
   } catch (error) {
     console.error('Error toggling blog activation:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -496,7 +496,7 @@ const postBlog = async (req, res) => {
     res.status(201).redirect(`/admin/blogs/edit-blog/${savedBlog._id}`);
   } catch (error) {
     console.error('Error posting blog:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -515,7 +515,7 @@ const updateBlog = async (req, res) => {
 
     // Check if the blog is not found
     if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' });
+      return res.status(404).redirect('/404');
     }
 
     // Update the blog properties
@@ -532,7 +532,7 @@ const updateBlog = async (req, res) => {
     res.status(200).redirect(`/admin/blogs/blog/${blogId}`);
   } catch (error) {
     console.error('Error updating blog:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -550,7 +550,7 @@ const getSingleBlog = async (req, res) => {
 
     // Check if the blog is not found
     if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' });
+      return res.status(404).redirect('/404');
     }
 
     // Format the blog date
@@ -651,7 +651,7 @@ const getBlogs = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching all blogs:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
@@ -659,15 +659,36 @@ const getBlogs = async (req, res) => {
 
 const getAllMessages = async (req, res) => {
   try {
-    const messages = await Message.find();
-    res.status(200).render('messages', {
-      messages
+    const messages = await Message.find().sort({ date: -1 });
+
+    // Format the date for each message
+    const formattedMessages = messages.map(message => {
+      const formattedDate = message.date
+        ? message.date.toLocaleDateString('en-US', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          })
+        : 'Not Available';
+
+      return {
+        ...message.toObject(),
+        formattedDate,
+      };
+    });
+
+    console.log('Messages: ', formattedMessages);
+
+    res.status(200).render('msgs', {
+      msgs: formattedMessages,
     });
   } catch (error) {
     console.error('Error fetching messages:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
+
+
 
 const getSingleMessage = async (req, res) => {
   try {
@@ -682,16 +703,29 @@ const getSingleMessage = async (req, res) => {
 
     // Check if the message is not found
     if (!message) {
-      return res.status(404).json({ error: 'Message not found' });
+      res.status(404).redirect('/404');
     }
 
     res.status(200).json(message);
   } catch (error) {
     console.error('Error fetching single message:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).redirect('/500');
   }
 };
 
+
+const getSettings= async (req, res) => {
+  try {
+    const messages = await Message.find().sort({ createdAt: -1 });
+    console.log('Messages: ', messages)
+    res.status(200).render('settings', {
+      msgs:messages
+    });
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).redirect('/500');
+  }
+};
 // Export the controller function
 module.exports = {
   createVolunteer,
@@ -717,7 +751,8 @@ module.exports = {
   toggleBlogFeature,
   getAllMessages,
   getSingleMessage,
-  toggleBlogComment
+  toggleBlogComment,
+  getSettings
   
 };
 

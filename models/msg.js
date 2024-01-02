@@ -20,6 +20,10 @@ const messageSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  date:{
+    type: Date,
+    default: Date.now()
+  }
 });
 
 const Message = mongoose.model('Msg', messageSchema);

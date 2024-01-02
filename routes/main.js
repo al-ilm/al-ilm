@@ -88,6 +88,7 @@ router.post('/admin/blogs/delete-blog', superControl.deleteBlog);
 //messages
 router.get('/admin/messages/all/', superControl.getAllMessages);
 router.get('/admin/messages/msg/:id', superControl.getSingleMessage);
+router.get('/admin/settings', superControl.getSettings);
 
 
 // let upload = ''upload.single('doc'),
