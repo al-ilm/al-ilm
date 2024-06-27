@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const mainController = require('../controllers/main');
 const mainPostController = require('../controllers/main-posts');
 const adminController = require('../controllers/admin');
@@ -89,6 +91,13 @@ router.post('/admin/blogs/delete-blog', superControl.deleteBlog);
 router.get('/admin/messages/all/', superControl.getAllMessages);
 router.get('/admin/messages/msg/:id', superControl.getSingleMessage);
 router.get('/admin/settings', superControl.getSettings);
+
+// Team Members
+router.get('/admin/team-members', adminController.getTeamMembers);
+router.post('/admin/team-members/add-member', upload.single('img'), superControl.postMember);
+router.get('/admin/team-members/edit-member/:id', adminController.getEditMember);
+router.post('/admin/team-members/edit-member/:id', upload.single('img'), superControl.updateMember);
+router.post('/admin/team-members/delete-member/:id', superControl.deleteMember);
 
 
 // let upload = ''upload.single('doc'),

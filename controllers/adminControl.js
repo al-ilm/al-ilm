@@ -1,13 +1,16 @@
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const fs = require('fs');
+const path = require('path');
 const Volunteer = require('../models/volunteer'); // Adjust the path based on your project structure
 const User = require('../models/user'); // Adjust the path based on your project structure
-const bcrypt = require('bcryptjs');
 const ProgramModel = require('../models/program'); // Adjust the path based on your project structure
-const mongoose = require('mongoose');
 const Blog = require('../models/blog'); // Adjust the path based on your project structure
-const Message = require('../models/msg'); 
-
+const Message = require('../models/msg');
 const Pupil = require('../models/pupil'); // Make sure to adjust the path based on your file structure
-
+const TeamMember = require('../models/teamMembers');
 // Controller function to create a new pupil
 const createPupil = async (req, res) => {
   try {
@@ -726,6 +729,79 @@ const getSettings= async (req, res) => {
     res.status(500).redirect('/500');
   }
 };
+
+
+const postMember = async (req, res) => {
+	try {
+		console.log(req.file);
+		const memberData = {
+			name: req.body.name,
+			role: req.body.role,
+			bio: req.body.bio,
+			img: '/uploads/' + req.file.filename,
+		};
+		const member = new TeamMember(memberData);
+		await member.save();
+		res.status(201).redirect('/admin/team-members');
+	} catch (err) {
+		console.error('Error posting member:', err);
+		res.status(500).redirect('/500');
+	}
+};
+
+const updateMember = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		// If there's a file in the request (presumably an image), add its path to the update object
+		if (req.file) {
+			req.body.img = '/uploads/' + req.file.filename;
+		} else {
+			// If there's no file in the request, keep the existing image
+			const member = await TeamMember.findById(id);
+			req.body.img = member.img;
+		}
+
+		// Update the team member in the database with the new data
+		await TeamMember.findByIdAndUpdate(id, { ...req.body });
+		res.status(200).redirect('/admin/team-members');
+	} catch (error) {
+		console.error('Error updating member:', error);
+		res.status(500).redirect('/500');
+	}
+};
+
+const deleteMember = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		const member = await TeamMember.findById(id);
+		if (!member) {
+			return res.status(404).json({ error: 'Member not found' });
+		}
+
+		// Delete the uploaded file associated with the member
+		if (member.img) {
+			const filePath = path.join(__dirname, '..', member.img);
+			fs.unlink(filePath, (err) => {
+				if (err) {
+					console.error('Error deleting file:', err);
+				}
+			});
+		}
+
+		const deletedMember = await TeamMember.findByIdAndDelete(id);
+		if (!deletedMember) {
+			return res.status(404).redirect('/404');
+		}
+
+		res.status(200).redirect('/admin/team-members');
+	} catch (error) {
+		console.error('Error deleting member:', error);
+		res.status(500).redirect('/500');
+	}
+};
+
 // Export the controller function
 module.exports = {
   createVolunteer,
@@ -752,7 +828,10 @@ module.exports = {
   getAllMessages,
   getSingleMessage,
   toggleBlogComment,
-  getSettings
+  getSettings,
+  postMember,
+	updateMember,
+	deleteMember,
   
 };
 

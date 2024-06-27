@@ -5589,6 +5589,41 @@ textarea.form-control-lg {
 .navbar-dark .navbar-text a,.navbar-dark .navbar-text a:focus,.navbar-dark .navbar-text a:hover {
 	color:#fff
 }
+
+.card-scroll {
+	height: 200px;
+	overflow-y: auto;
+  }
+  
+  /* For Webkit browsers (Chrome, Safari) */
+  .card-scroll::-webkit-scrollbar {
+	width: 0.2px; /* 60% of 1px */
+  }
+  
+  .card-scroll::-webkit-scrollbar-track {
+	background: transparent; 
+  }
+  
+  .card-scroll::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 100, 0, 0.2); /* very faded dark green */
+	border-radius: 1px;
+	border: none; /* removes knots */
+  }
+  
+  /* For Firefox */
+  .card-scroll {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 100, 0, 0.2) transparent;
+  }
+  
+  /* For Edge, IE, and other browsers */
+  .card-scroll {
+	scrollbar-width: 0.2px; /* 60% of 1px */
+	scrollbar-color: rgba(0, 100, 0, 0.2) transparent;
+  }
+  
+  
+
 .card {
 	position:relative;
 	display:flex;

@@ -9,6 +9,7 @@ const {
   const mongoose = require('mongoose')
  const Blog = require('../models/blog'); // Import the database functions
  const Message = require('../models/msg'); // Import the database functions
+ const TeamMember = require('../models/teamMembers');
 
 
 // controllers/homeController.js
@@ -16,8 +17,15 @@ const getHomePage = (req, res) => {
     res.render('home');
 };
 
-const getAboutPage = (req, res) => {
-    res.render('about');
+const getAboutPage = async (req, res) => {
+	try {
+		const teamMembers = await TeamMember.find();
+    console.log("Members: ", teamMembers )
+		res.render('about', { teamMembers });
+	} catch (err) {
+		console.error('Error fetching team members:', err);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 };
 
 const getContactPage = (req, res) => {

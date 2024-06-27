@@ -4,6 +4,7 @@ const User = require('../models/user');
 const Program = require('../models/program'); 
 const Pupil = require('../models/pupil'); 
 const Donation = require('../models/donation'); 
+const TeamMember = require('../models/teamMembers');
 
 const getdashboard = (req, res) => {
     res.render('dashboard');
@@ -284,7 +285,36 @@ const getProfile= async (req, res) => {
 };
 
 
+const getTeamMembers = async (req, res) => {
+	const teamMembers = await TeamMember.find();
+	res.render('teamMembers', { teamMembers });
+};
 
+const getEditMember = async (req, res) => {
+	try {
+		// Retrieve the member ID from the URL parameters
+		const id = req.params.id;
+
+		// Check if the ID is valid
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			return res.status(400).json({ error: 'Invalid member ID' });
+		}
+
+		// Fetch the member from the database
+		const member = await TeamMember.findById(id);
+
+		// If the member doesn't exist, return a 404 error
+		if (!member) {
+			return res.status(404).redirect('/404');
+		}
+
+		// Render the edit form, passing the member data to the view
+		res.status(200).render('editMember', { member });
+	} catch (error) {
+		console.error('Error fetching member:', error);
+		res.status(500).redirect('/500');
+	}
+};
 
 
 
@@ -306,5 +336,7 @@ module.exports = {
     getAddNewProgram,
     getProgramById,
     getDonations,
+    getTeamMembers,
+    getEditMember,
     
 }

@@ -1,0 +1,60 @@
+<%- include('partials/head') %> <%- include('partials/nav') %>
+<main class="bg-primary">
+	
+	<div class="pt-5 pt-md-7 bg-gray-200">
+		<div class="mx-3" style="margin: 0%; padding: 0">
+			<div class="row mt-4">
+				<div class="col-md-2"><%- include('partials/admin-sidebar') %></div>
+				<div class="col-md-10">
+					<div class="card mb-5">
+						<div class="card-body">
+							<h4 class="card-title">Edit Team Member</h4>
+							<p class="card-description">Update the details of the team member.</p>
+							<form action="/admin/team-members/edit-member/<%= member._id %>" method="POST" enctype="multipart/form-data">
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<div class="mb-3">
+											<label for="name">Name</label>
+											<input class="form-control" id="name" name="name" type="text" placeholder="Enter Member Name" value="<%= member.name %>" required />
+										</div>
+									</div>
+									<div class="col-md-6 mb-3">
+										<div class="mb-3">
+											<label for="role">Role Name</label>
+											<input class="form-control" id="role" name="role" type="text" placeholder="Enter Role Name" value="<%= member.role %>" required />
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<div class="mb-3">
+											<label for="bio">Bio</label>
+											<textarea class="form-control" id="bio" name="bio" type="text" placeholder="Enter Bio" required><%= member.bio %></textarea>
+										</div>
+									</div>
+									<div class="col-md-6 mb-3">
+										<div class="mb-3">
+											<label for="img">Image</label>
+											<input class="form-control" id="img" name="img" type="file" />
+											<small>Leave blank to keep current image</small>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<textarea class=" form-control" name="text_body" id="user-guide" rows="10"></textarea>
+
+								</div>
+								<div class="mt-2">
+									<button type="submit" class="btn text-center btn-primary">Update</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+
+<%- include('partials/footer') %> <%- include('partials/end') %>

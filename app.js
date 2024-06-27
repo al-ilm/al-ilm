@@ -24,6 +24,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(flash());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 const indexRoute = require('./routes/main');
